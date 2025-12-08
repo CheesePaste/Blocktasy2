@@ -12,7 +12,7 @@ public class MyRenderLayers extends RenderLayer {
     }
 
     public static final RenderLayer TRAIL_GLOW = RenderLayer.of(
-            "worldreloader:trail_glow",
+            "blocktasy:trail_glow",
             VertexFormats.POSITION_TEXTURE_COLOR, // 我们需要 TEXTURE 格式来传递 UV
             VertexFormat.DrawMode.QUADS,
             256,
@@ -28,7 +28,7 @@ public class MyRenderLayers extends RenderLayer {
 
 
     public static final RenderLayer CUSTOM_BLOCK = RenderLayer.of(
-            "worldreloader:custom_block",
+            "blocktasy:custom_block",
             VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL,
             VertexFormat.DrawMode.QUADS,
             256,

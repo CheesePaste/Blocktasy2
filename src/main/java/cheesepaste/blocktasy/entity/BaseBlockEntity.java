@@ -1,5 +1,6 @@
 package cheesepaste.blocktasy.entity;
 
+import cheesepaste.blocktasy.component.EntityComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -18,10 +19,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * 基础方块实体类
@@ -46,6 +45,13 @@ public abstract class BaseBlockEntity extends LivingEntity {
         super(type, world);
         //.info("BaseBlockEntity created with default constructor");
     }
+
+    public List<Function<Void,Void>> tick=new ArrayList<>();
+    public List<Function<NbtCompound,Void>> writeNBT=new ArrayList<>();
+    public List<Function<NbtCompound,Void>> readNBT=new ArrayList<>();
+
+
+    public Map<Class<?extends EntityComponents>,EntityComponents> Components=new HashMap<>();
 
     protected BaseBlockEntity(EntityType<? extends LivingEntity> type, World world, BlockPos pos, BlockState blockState) {
         this(type, world);
@@ -127,6 +133,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
     @Override
     public void tick() {
         super.tick();
+        for (var f:tick){
+            f.apply(null);
+        }
 
         this.age++;
 
@@ -157,6 +166,10 @@ public abstract class BaseBlockEntity extends LivingEntity {
                 trailNbt.putDouble("Z" + i, pos.z);
             }
             nbt.put("Trail", trailNbt);
+
+        }
+        for(var i:writeNBT){
+            i.apply(nbt);
         }
 
         //.info("Data written to NBT. BlockStateId: {}, Age: {}", blockStateId, age);
@@ -185,6 +198,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
                 double z = trailNbt.getDouble("Z" + i);
                 trailPositions.add(new Vec3d(x, y, z));
             }
+        }
+        for(var i:readNBT){
+            i.apply(nbt);
         }
 
     }

@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "one"
   },
-  "vertex": "puzzle-rain:trail_glow",
-  "fragment": "puzzle-rain:trail_glow",
+  "vertex": "blocktasy:trail_glow",
+  "fragment": "blocktasy:trail_glow",
   "attributes": [
     "Position",
     "Color",

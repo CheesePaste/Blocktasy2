@@ -2,6 +2,8 @@ package cheesepaste.blocktasy.client;
 
 
 import cheesepaste.blocktasy.Blocktasy;
+import cheesepaste.blocktasy.render.BaseBlockEntityRenderer;
+import cheesepaste.blocktasy.entity.ModEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -16,7 +18,7 @@ public class BlocktasyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        /*CoreShaderRegistrationCallback.EVENT.register(context -> {
+        CoreShaderRegistrationCallback.EVENT.register(context -> {
 
             context.register(
                     Identifier.of(Blocktasy.MOD_ID, "trail_glow"), // JSON 文件名 (不带后缀)
@@ -24,19 +26,18 @@ public class BlocktasyClient implements ClientModInitializer {
                     program -> trailGlowShader = program         // 回调：加载成功后赋值给静态变量
             );
         });
-        CoreShaderRegistrationCallback.EVENT.register(context -> {
-            context.register(
-                    Identifier.of(Blocktasy.MOD_ID, "gravitational_distortion"),
-                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, // 实体的标准顶点格式
-                    program -> GRAVITY_WARP = program
-            );
-        });
+//        CoreShaderRegistrationCallback.EVENT.register(context -> {
+//            context.register(
+//                    Identifier.of(Blocktasy.MOD_ID, "gravitational_distortion"),
+//                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, // 实体的标准顶点格式
+//                    program -> GRAVITY_WARP = program
+//            );
+//        });
 
 
-        EntityRendererRegistry.register(ModEntities.FLYING_BLOCK_ENTITY,
-                BaseBlockEntityRenderer::new);
+
         EntityRendererRegistry.register(ModEntities.FollowingEntity,
-                BaseBlockEntityRenderer::new);*/
+                BaseBlockEntityRenderer::new);
     }
 
     public static ShaderProgram getTrailGlowShader() {
