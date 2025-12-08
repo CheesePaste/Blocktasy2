@@ -160,6 +160,13 @@ public class ControlableComponent extends EntityComponents{
             double z = nbt.getDouble("ControlTargetZ");
             this.targetControlPos = new Vec3d(x, y, z);
         }
+        if (nbt.contains("JustLaunched", NbtElement.BYTE_TYPE)) {
+            justLaunched = nbt.getBoolean("JustLaunched");
+        }
+
+        if (nbt.contains("LaunchCooldown", NbtElement.INT_TYPE)) {
+            launchCooldown = nbt.getInt("LaunchCooldown");
+        }
     }
 
     @Override

@@ -168,7 +168,11 @@ public class TargetableComponent extends EntityComponents{
         if (nbt.contains("Target", NbtElement.INT_ARRAY_TYPE)) {
             UUID targetUuid = nbt.getUuid("Target");
             parent.getDataTracker().set(TARGET_UUID, Optional.of(targetUuid));
-        }    }
+        }
+        if (nbt.contains("TargetLostCounter", NbtElement.INT_TYPE)) {
+            this.targetLostCounter = nbt.getInt("TargetLostCounter");
+        }
+    }
 
     @Override
     public void writeNBT(NbtCompound nbt) {

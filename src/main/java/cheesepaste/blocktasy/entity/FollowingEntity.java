@@ -331,19 +331,11 @@ public class FollowingEntity extends BaseBlockEntity {
         // 加载控制目标位置
 
 
-        if (nbt.contains("JustLaunched", NbtElement.BYTE_TYPE)) {
-            justLaunched = nbt.getBoolean("JustLaunched");
-        }
-
-        if (nbt.contains("LaunchCooldown", NbtElement.INT_TYPE)) {
-            launchCooldown = nbt.getInt("LaunchCooldown");
-        }
 
 
 
-        if (nbt.contains("TargetLostCounter", NbtElement.INT_TYPE)) {
-            this.targetLostCounter = nbt.getInt("TargetLostCounter");
-        }
+
+
 
         if (nbt.contains("TargetYaw", NbtElement.FLOAT_TYPE)) {
             this.dataTracker.set(TARGET_YAW, nbt.getFloat("TargetYaw"));
