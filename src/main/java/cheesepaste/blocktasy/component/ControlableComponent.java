@@ -7,6 +7,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,27 @@ public class ControlableComponent extends EntityComponents{
     ControlableComponent(BaseBlockEntity parent) {
         super(parent);
     }
+
+    @Override
+    public void tick() {
+
+    }
+
+    @Override
+    public void initDT(DataTracker.Builder builder) {
+
+    }
+
+    @Override
+    public void readNBT(NbtCompound nbt) {
+
+    }
+
+    @Override
+    public void writeNBT(NbtCompound nbt) {
+
+    }
+
     public void setControllingPlayer(@Nullable PlayerEntity player) {
         if (player != null) {
             this.controllingPlayerId = player.getUuid();

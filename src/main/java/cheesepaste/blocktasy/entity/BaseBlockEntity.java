@@ -46,9 +46,7 @@ public abstract class BaseBlockEntity extends LivingEntity {
         //.info("BaseBlockEntity created with default constructor");
     }
 
-    public List<Function<Void,Void>> tick=new ArrayList<>();
-    public List<Function<NbtCompound,Void>> writeNBT=new ArrayList<>();
-    public List<Function<NbtCompound,Void>> readNBT=new ArrayList<>();
+
 
 
     public Map<Class<?extends EntityComponents>,EntityComponents> Components=new HashMap<>();
@@ -66,6 +64,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(BLOCK_STATE_ID, 0);
+        Components.forEach((a,b)->{
+            b.initDT(builder);
+        });
         //.info("Data tracker initialized");
     }
 
@@ -133,9 +134,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
     @Override
     public void tick() {
         super.tick();
-        for (var f:tick){
-            f.apply(null);
-        }
+        Components.forEach((a,b)->{
+            b.tick();
+        });
 
         this.age++;
 
@@ -168,9 +169,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
             nbt.put("Trail", trailNbt);
 
         }
-        for(var i:writeNBT){
-            i.apply(nbt);
-        }
+        Components.forEach((a,b)->{
+            b.writeNBT(nbt);
+        });
 
         //.info("Data written to NBT. BlockStateId: {}, Age: {}", blockStateId, age);
     }
@@ -199,9 +200,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
                 trailPositions.add(new Vec3d(x, y, z));
             }
         }
-        for(var i:readNBT){
-            i.apply(nbt);
-        }
+        Components.forEach((a,b)->{
+            b.readNBT(nbt);
+        });
 
     }
 

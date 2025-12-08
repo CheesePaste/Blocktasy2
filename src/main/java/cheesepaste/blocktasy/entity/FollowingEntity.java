@@ -150,6 +150,7 @@ public class FollowingEntity extends BaseBlockEntity {
         builder.add(CURRENT_YAW, 0f);
         builder.add(IS_CONTROLLED, false);
         builder.add(CONTROLLING_PLAYER_UUID, Optional.empty());
+
     }
 
     // ================= 目标管理 =================
