@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class TargetableComponent extends EntityComponents{
-    private Entity target;
+    public Entity target;
     private TrackedData<Optional<UUID>> TARGET_UUID=null;
     int targetLostCounter=0;
     private static final float CLOSE_DISTANCE = 2.0f;
@@ -55,7 +55,7 @@ public class TargetableComponent extends EntityComponents{
             refreshTarget();
         }
         if(target!=null){
-            lookAtTarget(target);
+            //smoothLookAtPosition(target.getPos(),5);
         }
 
         if (this.target == null) {
@@ -256,5 +256,29 @@ public class TargetableComponent extends EntityComponents{
         parent.setHeadYaw((float)targetYaw);
         parent.setBodyYaw((float) targetYaw);
         //PuzzleRain.LOGGER.info(target.getRotationVector().toString());
+    }
+    /**
+     * 基于Vec3d目标位置的版本
+     * @param targetPos 目标位置
+     * @param smoothFactor 平滑系数
+     */
+    private void smoothLookAtPosition(Vec3d targetPos, float smoothFactor) {
+        // 计算方向向量
+        double dx = targetPos.x - parent.getX();
+        double dz = targetPos.z - parent.getZ();
+
+        // 计算目标yaw角度
+        double targetYaw = MathHelper.atan2(dz, dx) * (180.0 / Math.PI) - 90.0;
+
+        float currentYaw = parent.getYaw();
+        currentYaw = MathHelper.wrapDegrees(currentYaw);
+        targetYaw = MathHelper.wrapDegrees((float)targetYaw);
+
+        // 角度插值
+        float angleDiff = MathHelper.wrapDegrees((float)targetYaw - currentYaw);
+        float newYaw = currentYaw + angleDiff * MathHelper.clamp(smoothFactor, 0, 1);
+
+        parent.setYaw(newYaw);
+        parent.setHeadYaw(newYaw);
     }
 }

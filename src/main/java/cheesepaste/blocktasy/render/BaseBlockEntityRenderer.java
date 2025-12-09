@@ -1,6 +1,7 @@
 package cheesepaste.blocktasy.render;
 
 import cheesepaste.blocktasy.Blocktasy;
+import cheesepaste.blocktasy.component.TargetableComponent;
 import cheesepaste.blocktasy.entity.BaseBlockEntity;
 import cheesepaste.blocktasy.entity.FollowingEntity;
 import net.minecraft.block.BlockRenderType;
@@ -12,6 +13,8 @@ import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -29,14 +32,7 @@ public class BaseBlockEntityRenderer extends EntityRenderer<BaseBlockEntity> {
 
     @Override
     public void render(BaseBlockEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        // 使用插值的旋转角度
-        if (entity instanceof FollowingEntity entity1)
-        {
-            float renderYaw = entity1.getYaw(tickDelta);
-
-            // 应用旋转
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(renderYaw));
-        }
+//
         BlockState blockState = entity.getBlockState();
         light = 0xF000F0;
         if (blockState.getRenderType() != BlockRenderType.MODEL) {
@@ -46,11 +42,6 @@ public class BaseBlockEntityRenderer extends EntityRenderer<BaseBlockEntity> {
 
         matrices.push();
 
-        // 应用旋转动画
-        //matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw(tickDelta)));
-
-        // 应用缩放（可选）
-        //matrices.translate(-0.5, 0.0, -0.5);
         renderTrail3(entity,matrices,vertexConsumers,tickDelta);
         matrices.push();
         if(Blocktasy.config.useBlockTrail) renderBlockTrail(entity,blockState,matrices,vertexConsumers,tickDelta,light);
@@ -59,7 +50,8 @@ public class BaseBlockEntityRenderer extends EntityRenderer<BaseBlockEntity> {
         matrices.push();
         if(Blocktasy.config.useEnergyField) renderEnergyField(entity,matrices,vertexConsumers,tickDelta,light);
         //matrices.translate(-0.5, 0.0, -0.5);
-        blockRenderManager.renderBlockAsEntity(blockState, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
+        renderBlockFacingPlayer(blockState,entity,matrices,vertexConsumers,tickDelta,light);
+        //blockRenderManager.renderBlockAsEntity(blockState, matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
 
 
 
@@ -79,6 +71,89 @@ public class BaseBlockEntityRenderer extends EntityRenderer<BaseBlockEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
+
+    private void renderBlockFacingPlayer(BlockState blockState, BaseBlockEntity entity,
+                                         MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+                                         float tickDelta, int light) {
+
+        matrices.push();
+
+//        // 1. 移动到实体位置（包含插值）
+//        double x = MathHelper.lerp(tickDelta, entity.prevX, entity.getX());
+//        double y = MathHelper.lerp(tickDelta, entity.prevY, entity.getY());
+//        double z = MathHelper.lerp(tickDelta, entity.prevZ, entity.getZ());
+//        matrices.translate(x, y, z);
+
+        // 2. 平滑旋转（使用lerp插值）
+        float targetYaw = calculateTargetYaw(entity, tickDelta);
+        float targetPitch = calculateTargetPitch(entity, tickDelta);
+
+        // 应用平滑旋转
+        entity.setYaw(MathHelper.lerpAngleDegrees(0.1f, entity.getYaw(), targetYaw));
+        //entity.setRenderPitch(MathHelper.lerp(0.1f, entity.getRenderPitch(), targetPitch));
+
+        // 应用旋转到矩阵
+
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-entity.getYaw()));
+        //matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.getRenderPitch()));
+
+        // 3. 调整方块位置（使旋转中心在方块中心）
+        matrices.translate(-0.5, 0, -0.5);
+
+        BlockRenderManager blockRenderManager = MinecraftClient.getInstance().getBlockRenderManager();
+        // 4. 渲染方块
+        blockRenderManager.renderBlockAsEntity(
+                blockState,
+                matrices,
+                vertexConsumers,
+                light,
+                OverlayTexture.DEFAULT_UV
+        );
+
+        matrices.pop();
+    }
+
+    private float calculateTargetYaw(BaseBlockEntity entity, float tickDelta) {
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        Entity player=null;
+        if(entity.Components.get(TargetableComponent.class) instanceof TargetableComponent t){
+            player = t.target;
+        }
+
+
+        if (player == null) return 0;
+
+        // 计算实体指向玩家的方向
+        double dx = player.getX() - entity.getX();
+        double dz = player.getZ() - entity.getZ();
+
+        // 转换为角度（-180到180）
+        float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0f;
+
+        // 确保角度在0-360范围内
+        return MathHelper.wrapDegrees(yaw);
+    }
+
+    private float calculateTargetPitch(BaseBlockEntity entity, float tickDelta) {
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        PlayerEntity player = MinecraftClient.getInstance().player;
+
+        if (player == null) return 0;
+
+        // 计算水平距离和垂直距离
+        double dx = player.getX() - entity.getX();
+        double dy = player.getY() - entity.getY();
+        double dz = player.getZ() - entity.getZ();
+
+        // 计算水平距离
+        double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+
+        // 计算俯仰角（看向玩家的高度）
+        float pitch = (float) Math.toDegrees(Math.atan2(dy, horizontalDistance));
+
+        // 调整范围
+        return MathHelper.clamp(pitch, -90.0f, 90.0f);
+    }
 
     private void renderEmojiOnFace(BaseBlockEntity entity, MatrixStack matrices,
                                    VertexConsumerProvider vertexConsumers, float tickDelta) {
