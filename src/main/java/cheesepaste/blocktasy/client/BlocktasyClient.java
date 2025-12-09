@@ -18,6 +18,8 @@ public class BlocktasyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
+        EntityRendererRegistry.register(ModEntities.FollowingEntity,
+                BaseBlockEntityRenderer::new);
         CoreShaderRegistrationCallback.EVENT.register(context -> {
 
             context.register(
@@ -26,18 +28,16 @@ public class BlocktasyClient implements ClientModInitializer {
                     program -> trailGlowShader = program         // 回调：加载成功后赋值给静态变量
             );
         });
-//        CoreShaderRegistrationCallback.EVENT.register(context -> {
-//            context.register(
-//                    Identifier.of(Blocktasy.MOD_ID, "gravitational_distortion"),
-//                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, // 实体的标准顶点格式
-//                    program -> GRAVITY_WARP = program
-//            );
-//        });
+
+        CoreShaderRegistrationCallback.EVENT.register(context -> {
+            context.register(
+                    Identifier.of(Blocktasy.MOD_ID, "gravitational_distortion"),
+                    VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, // 实体的标准顶点格式
+                    program -> GRAVITY_WARP = program
+            );
+        });
 
 
-
-        EntityRendererRegistry.register(ModEntities.FollowingEntity,
-                BaseBlockEntityRenderer::new);
     }
 
     public static ShaderProgram getTrailGlowShader() {

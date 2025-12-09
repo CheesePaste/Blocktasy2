@@ -13,7 +13,7 @@ public class WandModeComponent {
 
     public static final Codec<WandModeComponent> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Codecs.rangedInt(0, 2).fieldOf("mode").forGetter(WandModeComponent::getModeIndex)
+                    Codecs.rangedInt(0, 3).fieldOf("mode").forGetter(WandModeComponent::getModeIndex)
             ).apply(instance, WandModeComponent::new)
     );
 

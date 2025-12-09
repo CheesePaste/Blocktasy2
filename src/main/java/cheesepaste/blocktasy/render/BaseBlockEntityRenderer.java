@@ -19,7 +19,6 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 import java.util.List;
 
@@ -376,8 +375,8 @@ public class BaseBlockEntityRenderer extends EntityRenderer<BaseBlockEntity> {
         }
 
         // 渲染最后一个点
-        if (trail.size() > 0) {
-            Vec3d lastPos = trail.get(trail.size() - 1);
+        if (!trail.isEmpty()) {
+            Vec3d lastPos = trail.getLast();
             renderTrailBlock(entityX, entityY, entityZ, lastPos, trail.size() - 1, trail.size(),
                     blockState, matrices, vertexConsumers, light, blockRenderManager);
         }

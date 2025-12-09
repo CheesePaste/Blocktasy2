@@ -21,6 +21,9 @@
 		],
 		"fabric-datagen": [
 			"cheesepaste.blocktasy.BlocktasyDataGenerator"
+		],
+		"client": [
+			"cheesepaste.blocktasy.client.BlocktasyClient"
 		]
 	},
 	"mixins": [

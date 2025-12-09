@@ -47,7 +47,7 @@ public class Blocktasy implements ModInitializer {
 	private static final int MAX_CONCURRENT_FLYING_BLOCKS = 400000; // 最大同时飞行方块数
 	private static final int MAX_SPAWN_PER_TICK = 40000; // 每帧最多生成新方块数
 
-	public static ConfigHolder ch = AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+	public static ConfigHolder<ModConfig> ch = AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
 	@Override
 	public void onInitialize() {
 

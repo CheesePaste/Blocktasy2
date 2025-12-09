@@ -1,6 +1,6 @@
 {
-  "vertex": "puzzle-rain:gravitational_distortion",
-  "fragment": "puzzle-rain:gravitational_distortion",
+  "vertex": "blocktasy:gravitational_distortion",
+  "fragment": "blocktasy:gravitational_distortion",
   "attributes": [
     "Position",
     "UV0",
