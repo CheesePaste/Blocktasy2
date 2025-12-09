@@ -48,6 +48,8 @@ public class FollowingEntity extends BaseBlockEntity {
         super(type, world, pos, state);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
+
+        OnSpawn();
     }
 
     public static DefaultAttributeContainer.Builder createFollowingAttributes() {
@@ -66,6 +68,8 @@ public class FollowingEntity extends BaseBlockEntity {
         this.setNoGravity(false);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
+
+        OnSpawn();
     }
 
     private void initializeComponents(DataTracker.Builder builder) {
@@ -76,8 +80,14 @@ public class FollowingEntity extends BaseBlockEntity {
         this.Components.put(BlockAbilityComponent.class, new DefaultBlockAbility(this));
         for(EntityComponents components : Components.values())
         {
-            components.OnSpawn();
             components.initDT(builder);
+        }
+    }
+    private void OnSpawn()
+    {
+        for(EntityComponents components : Components.values())
+        {
+            components.OnSpawn();
         }
     }
 
