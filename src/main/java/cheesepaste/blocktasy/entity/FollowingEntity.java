@@ -78,10 +78,10 @@ public class FollowingEntity extends BaseBlockEntity {
         this.Components.put(TargetableComponent.class, new TargetableComponent(this));
         this.Components.put(ControlableComponent.class, new ControlableComponent(this) );
         this.Components.put(BlockAbilityComponent.class, new DefaultBlockAbility(this));
-        for(EntityComponents components : Components.values())
-        {
-            components.initDT(builder);
-        }
+//        for(EntityComponents components : Components.values())
+//        {
+//            components.initDT(builder);
+//        }
     }
     private void OnSpawn()
     {

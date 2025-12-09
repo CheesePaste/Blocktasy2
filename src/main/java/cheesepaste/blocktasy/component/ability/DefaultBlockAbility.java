@@ -15,10 +15,10 @@ public class DefaultBlockAbility extends BlockAbilityComponent{
 
     @Override
     public void OnSpawn() {
-        BlockAbilityComponent ability=Blocktasy.abilityMap.get(blockentity.getBlockState());
+        BlockAbilityComponent ability=Blocktasy.abilityMap.get(parent.getBlockState());
         if(ability!=null)
         {
-            blockentity.Components.replace(BlockAbilityComponent.class,ability);
+            parent.Components.replace(BlockAbilityComponent.class,ability);
             ability.OnSpawn();
         }
     }
