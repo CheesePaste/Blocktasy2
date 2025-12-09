@@ -5,6 +5,7 @@ import cheesepaste.blocktasy.component.EntityComponents;
 import cheesepaste.blocktasy.component.TargetableComponent;
 import cheesepaste.blocktasy.component.ability.BlockAbilityComponent;
 import cheesepaste.blocktasy.component.ability.DefaultBlockAbility;
+import com.llamalad7.mixinextras.lib.antlr.runtime.misc.FlexibleHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class FollowingEntity extends BaseBlockEntity {
 
@@ -46,8 +48,6 @@ public class FollowingEntity extends BaseBlockEntity {
         super(type, world, pos, state);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
-
-        initializeComponents();
     }
 
     public static DefaultAttributeContainer.Builder createFollowingAttributes() {
@@ -66,11 +66,10 @@ public class FollowingEntity extends BaseBlockEntity {
         this.setNoGravity(false);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
-
-        initializeComponents();
     }
 
-    private void initializeComponents() {
+    private void initializeComponents(DataTracker.Builder builder) {
+        this.Components=new HashMap<>();
 
         this.Components.put(TargetableComponent.class, new TargetableComponent(this));
         this.Components.put(ControlableComponent.class, new ControlableComponent(this) );
@@ -78,12 +77,14 @@ public class FollowingEntity extends BaseBlockEntity {
         for(EntityComponents components : Components.values())
         {
             components.OnSpawn();
+            components.initDT(builder);
         }
     }
 
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
+        initializeComponents(builder);
     }
 
     @Override

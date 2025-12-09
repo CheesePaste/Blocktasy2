@@ -38,6 +38,7 @@ public abstract class BaseBlockEntity extends LivingEntity {
     protected final List<Vec3d> trailPositions = new ArrayList<>();
     private int debugTickCounter = 0;
     private static final int DEBUG_LOG_INTERVAL = 100; // 每100 tick记录一次调试信息
+    public Map<Class<?extends EntityComponents>,EntityComponents> Components;
 
     // ================= 构造方法 =================
 
@@ -49,12 +50,11 @@ public abstract class BaseBlockEntity extends LivingEntity {
 
 
 
-    public Map<Class<?extends EntityComponents>,EntityComponents> Components=new HashMap<>();
 
     protected BaseBlockEntity(EntityType<? extends LivingEntity> type, World world, BlockPos pos, BlockState blockState) {
         this(type, world);
-        this.setPosition(Vec3d.ofCenter(pos));
         this.setBlockState(blockState);
+        this.setPosition(Vec3d.ofCenter(pos));
         this.setNoGravity(false);  // 确保重力启用
     }
 
@@ -64,10 +64,6 @@ public abstract class BaseBlockEntity extends LivingEntity {
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(BLOCK_STATE_ID, 0);
-        Components.forEach((a,b)->{
-            b.initDT(builder);
-        });
-        //.info("Data tracker initialized");
     }
 
     // ================= 方块状态管理 =================
