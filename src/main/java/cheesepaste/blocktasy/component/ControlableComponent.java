@@ -34,9 +34,11 @@ public class ControlableComponent extends EntityComponents {
     private TrackedData<Optional<UUID>> CONTROLLING_PLAYER_UUID;
 
 
-    public ControlableComponent(BaseBlockEntity parent) {
+    public ControlableComponent(BaseBlockEntity parent,TrackedData<Boolean> IS_CONTROLLED,TrackedData<Optional<UUID>> CONTROLLING_PLAYER_UUID) {
         super(parent);
         this.targetControlPos = parent.getPos();
+        this.IS_CONTROLLED=IS_CONTROLLED;
+        this.CONTROLLING_PLAYER_UUID=CONTROLLING_PLAYER_UUID;
     }
     public ControlableComponent(){
         super(null);
@@ -208,12 +210,6 @@ public class ControlableComponent extends EntityComponents {
     @Override
     public void OnSpawn() {
 
-    }
-
-    @Override
-    public void registerDataTracker() {
-        IS_CONTROLLED=DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        CONTROLLING_PLAYER_UUID= DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     }
 
     // ================= 私有方法 =================

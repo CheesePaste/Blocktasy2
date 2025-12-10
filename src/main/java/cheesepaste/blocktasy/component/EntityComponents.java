@@ -23,5 +23,4 @@ public abstract class  EntityComponents {
     public abstract void readNBT(NbtCompound nbt);
     public abstract void writeNBT(NbtCompound nbt);
     public abstract void OnSpawn();
-    public abstract void registerDataTracker();
 }

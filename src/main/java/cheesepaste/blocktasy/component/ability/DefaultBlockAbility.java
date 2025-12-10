@@ -26,10 +26,7 @@ public class DefaultBlockAbility extends BlockAbilityComponent{
         }
     }
 
-    @Override
-    public void registerDataTracker() {
 
-    }
 
     @Override
     ActionResult Attack() {

@@ -37,13 +37,13 @@ public class TargetableComponent extends EntityComponents{
     private static final float ROTATION_SPEED = 10.0f; // 旋转速度（度/秒）
     private static final float ROTATION_INTERPOLATION_FACTOR = 0.2f; // 旋转插值因子
 
-    @Override
-    public void registerDataTracker(){
-        TARGET_UUID=DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-    }
 
-    public TargetableComponent(BaseBlockEntity parent) {
+
+    public TargetableComponent(BaseBlockEntity parent,TrackedData<Optional<UUID>> TARGET_UUID) {
+
         super(parent);
+        this.TARGET_UUID=TARGET_UUID;
+
     }
     public TargetableComponent(){
         super(null);

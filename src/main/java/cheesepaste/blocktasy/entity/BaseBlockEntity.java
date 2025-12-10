@@ -67,9 +67,9 @@ public abstract class BaseBlockEntity extends LivingEntity {
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(BLOCK_STATE_ID, 0);
-        for (var entry : Components.entrySet()){
-            entry.getValue().initDT(builder);
-        }
+//        for (var entry : Components.entrySet()){
+//            entry.getValue().initDT(builder);
+//        }
 
 
     }

@@ -12,6 +12,8 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Arm;
@@ -20,16 +22,22 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
 
 public class FollowingEntity extends BaseBlockEntity {
 
 
-    static {
-        initializeComponents();
-        Components.forEach((k,v)->{
-            v.registerDataTracker();
-        });
-    }
+//    static {
+//        initializeComponents();
+//        Components.forEach((k,v)->{
+//            v.registerDataTracker();
+//        });
+//    }
+    private static final TrackedData<Optional<UUID>> TARGET_UUID = DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+    private static final TrackedData<Boolean> IS_CONTROLLED=DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Optional<UUID>> CONTROLLING_PLAYER_UUID=DataTracker.registerData(FollowingEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+
 
     void InitCollider() {
         enableCollision = true;
@@ -56,9 +64,9 @@ public class FollowingEntity extends BaseBlockEntity {
         super(type, world, pos, state);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
-        Components.forEach((k,v)->{
-            v.setParent(this);
-        });
+//        Components.forEach((k,v)->{
+//            v.setParent(this);
+//        });
         OnSpawn();
     }
 
@@ -78,18 +86,18 @@ public class FollowingEntity extends BaseBlockEntity {
         this.setNoGravity(false);
         InitCollider();
         this.MAX_TRAIL_LENGTH = 200;
-        Components.forEach((k,v)->{
-            v.setParent(this);
-        });
+//        Components.forEach((k,v)->{
+//            v.setParent(this);
+//        });
         OnSpawn();
     }
 
-    private static void initializeComponents() {
-        Components=new HashMap<>();
+    private void initializeComponents() {
 
-        Components.put(TargetableComponent.class, new TargetableComponent());
-        Components.put(ControlableComponent.class, new ControlableComponent() );
-        Components.put(BlockAbilityComponent.class, new DefaultBlockAbility());
+        Components=new HashMap<>();
+        Components.put(TargetableComponent.class, new TargetableComponent(this,TARGET_UUID));
+        Components.put(ControlableComponent.class, new ControlableComponent(this,IS_CONTROLLED,CONTROLLING_PLAYER_UUID) );
+        Components.put(BlockAbilityComponent.class, new DefaultBlockAbility(this));
 //        for(EntityComponents components : Components.values())
 //        {
 //            components.initDT(builder);
@@ -106,7 +114,12 @@ public class FollowingEntity extends BaseBlockEntity {
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
 
+        builder.add(TARGET_UUID, Optional.empty());
+        builder.add(IS_CONTROLLED, false);
+        builder.add(CONTROLLING_PLAYER_UUID, Optional.empty());
 
+
+        initializeComponents();
         super.initDataTracker(builder);
     }
 
