@@ -54,6 +54,7 @@ public class Blocktasy implements ModInitializer {
 		LOGGER.info("Puzzle Rain mod initialized!");
 		instance = this; // 设置实例
 		ModItems.initialize();
+		WaterBallParticleEffect.register();
 
 
 
